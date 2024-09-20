@@ -17,24 +17,20 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      # 登录 GitHub Packages（需要 GITHUB_TOKEN）
+      - name: Log in to GitHub Packages
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+
       # 构建 Docker 镜像
       - name: Build Docker image
         run: |
-          docker build -t alpine-utils:${{ github.event.inputs.docker_tag }} .
+          docker build -t ghcr.io/${{ github.repository_owner }}/${{ github.repository }}:alpine-curl-jq-${{ github.event.inputs.docker_tag }} .
 
-      # 保存 Docker 镜像为 tar 文件
-      - name: Save Docker image to tar
+      # 推送 Docker 镜像到 GitHub Packages
+      - name: Push Docker image to GitHub Packages
         run: |
-          docker save alpine-utils:${{ github.event.inputs.docker_tag }} -o alpine-utils-${{ github.event.inputs.docker_tag }}.tar
+          docker push ghcr.io/${{ github.repository_owner }}/${{ github.repository }}:alpine-curl-jq-${{ github.event.inputs.docker_tag }}
 
-      # 压缩 tar 文件
-      - name: Compress the tar file
-        run: tar -czf alpine-utils-${{ github.event.inputs.docker_tag }}.tar.gz alpine-utils-${{ github.event.inputs.docker_tag }}.tar
-
-      # 上传压缩的 tar 文件为构建工件
-      - name: Upload Docker image artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: docker-image-tar
-          path: alpine-utils-${{ github.event.inputs.docker_tag }}.tar.gz
-          retention-days:
+      # 清理中间文件（可选）
+      - name: Clean up Docker system
+        run: docker system
