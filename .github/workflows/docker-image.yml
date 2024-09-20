@@ -20,21 +20,21 @@ jobs:
       # 构建 Docker 镜像
       - name: Build Docker image
         run: |
-          docker build -t alpine-curl-jq:${{ github.event.inputs.docker_tag }} .
+          docker build -t alpine-utils:${{ github.event.inputs.docker_tag }} .
 
       # 保存 Docker 镜像为 tar 文件
       - name: Save Docker image to tar
         run: |
-          docker save alpine-curl-jq:${{ github.event.inputs.docker_tag }} -o alpine-curl-jq-${{ github.event.inputs.docker_tag }}.tar
+          docker save alpine-utils:${{ github.event.inputs.docker_tag }} -o alpine-utils-${{ github.event.inputs.docker_tag }}.tar
 
       # 压缩 tar 文件
       - name: Compress the tar file
-        run: tar -czf alpine-curl-jq-${{ github.event.inputs.docker_tag }}.tar.gz alpine-curl-jq-${{ github.event.inputs.docker_tag }}.tar
+        run: tar -czf alpine-utils-${{ github.event.inputs.docker_tag }}.tar.gz alpine-utils-${{ github.event.inputs.docker_tag }}.tar
 
       # 上传压缩的 tar 文件为构建工件
       - name: Upload Docker image artifact
         uses: actions/upload-artifact@v4
         with:
           name: docker-image-tar
-          path: alpine-curl-jq-${{ github.event.inputs.docker_tag }}.tar.gz
+          path: alpine-utils-${{ github.event.inputs.docker_tag }}.tar.gz
           retention-days:
