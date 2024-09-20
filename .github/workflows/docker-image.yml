@@ -28,12 +28,12 @@ jobs:
       # 构建 Docker 镜像
       - name: Build Docker image
         run: |
-          docker build -t ghcr.io/${{ github.repository_owner }}/${{ github.repository }}:alpine-utils-${{ github.event.inputs.docker_tag }} .
+          docker build -t ghcr.io/${{ github.repository_owner }}/alpine-utils:${{ github.event.inputs.docker_tag }} .
 
       # 推送 Docker 镜像到 GitHub Packages
       - name: Push Docker image to GitHub Packages
         run: |
-          docker push ghcr.io/${{ github.repository_owner }}/${{ github.repository }}:alpine-utils-${{ github.event.inputs.docker_tag }}
+          docker push ghcr.io/${{ github.repository_owner }}/alpine-utils:${{ github.event.inputs.docker_tag }}
 
       # 清理中间文件（可选）
       - name: Clean up Docker system
